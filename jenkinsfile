@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY = "localhost:5000"
         IMAGE_NAME = "anil-demo-app"
+        DOCKER_USER = "YOUR_DOCKERHUB_USERNAME"
     }
 
     stages {
@@ -20,21 +20,22 @@ pipeline {
         }
 
         stage('3. Build & Tag Docker Image') {
-    steps {
-        bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" build -t localhost:5000/anil-demo-app:9 -t localhost:5000/anil-demo-app:latest .'
-    }
-}
-        stage('4. Push Image to Registry') {
-    steps {
-        bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" push localhost:5000/anil-demo-app:9'
-        bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" push localhost:5000/anil-demo-app:latest'
-    }
-}
+            steps {
+                bat 'docker build -t %DOCKER_USER%/%IMAGE_NAME%:%BUILD_NUMBER% -t %DOCKER_USER%/%IMAGE_NAME%:latest .'
+            }
+        }
+
+        stage('4. Push Image to Docker Hub') {
+            steps {
+                bat 'docker push %DOCKER_USER%/%IMAGE_NAME%:%BUILD_NUMBER%'
+                bat 'docker push %DOCKER_USER%/%IMAGE_NAME%:latest'
+            }
+        }
     }
 
     post {
         success {
-            echo "Pipeline succeeded! Image ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} is available locally and in the registry."
+            echo "Pipeline succeeded! Docker image was built, tagged and pushed to Docker Hub."
         }
     }
 }
