@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_PATH = 'C:\\Users\\STUDENT\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
-        DOCKER_USER = 'YOUR_DOCKERHUB_USERNAME'
+        DOCKER_USER = 'rohhh12'
         IMAGE_NAME = 'anil-demo-app'
     }
 
