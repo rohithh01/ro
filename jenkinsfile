@@ -2,11 +2,13 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "anil-demo-app"
-        DOCKER_USER = "YOUR_DOCKERHUB_USERNAME"
+        DOCKER_PATH = 'C:\\Users\\STUDENT\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
+        DOCKER_USER = 'YOUR_DOCKERHUB_USERNAME'
+        IMAGE_NAME = 'anil-demo-app'
     }
 
     stages {
+
         stage('1. Checkout Code') {
             steps {
                 checkout scm
@@ -21,14 +23,16 @@ pipeline {
 
         stage('3. Build & Tag Docker Image') {
             steps {
-                bat 'docker build -t %DOCKER_USER%/%IMAGE_NAME%:%BUILD_NUMBER% -t %DOCKER_USER%/%IMAGE_NAME%:latest .'
+                bat '"%DOCKER_PATH%" --version'
+
+                bat '"%DOCKER_PATH%" build -t %DOCKER_USER%/%IMAGE_NAME%:%BUILD_NUMBER% -t %DOCKER_USER%/%IMAGE_NAME%:latest .'
             }
         }
 
         stage('4. Push Image to Docker Hub') {
             steps {
-                bat 'docker push %DOCKER_USER%/%IMAGE_NAME%:%BUILD_NUMBER%'
-                bat 'docker push %DOCKER_USER%/%IMAGE_NAME%:latest'
+                bat '"%DOCKER_PATH%" push %DOCKER_USER%/%IMAGE_NAME%:%BUILD_NUMBER%'
+                bat '"%DOCKER_PATH%" push %DOCKER_USER%/%IMAGE_NAME%:latest'
             }
         }
     }
@@ -36,6 +40,10 @@ pipeline {
     post {
         success {
             echo "Pipeline succeeded! Docker image was built, tagged and pushed to Docker Hub."
+        }
+
+        failure {
+            echo "Pipeline failed. Check the console output for the error."
         }
     }
 }
