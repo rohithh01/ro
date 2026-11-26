@@ -4,7 +4,8 @@ pipeline {
     environment {
         DOCKER_PATH = 'C:\\Users\\STUDENT\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
         DOCKER_USER = 'rohhh12'
-        IMAGE_NAME = 'anil-demo-app'
+        IMAGE_NAME = 'registry'
+        CONTAINER_NAME = 'local-registry'
     }
 
     stages {
@@ -39,11 +40,11 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline succeeded! Docker image was built, tagged and pushed to Docker Hub."
+            echo "Pipeline succeeded! Image %DOCKER_USER%/%IMAGE_NAME%:latest was pushed to Docker Hub."
         }
 
         failure {
-            echo "Pipeline failed. Check the console output for the error."
+            echo "Pipeline failed. Check the console output."
         }
     }
 }
